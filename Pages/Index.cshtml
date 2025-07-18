@@ -1,0 +1,190 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "KaamWala - Ghar ka Kaam Asaan";
+}
+
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6">
+                <h1 class="hero-title">
+                    <span class="text-primary">KaamWala</span><br>
+                    <span class="text-secondary">Ghar ka Kaam Asaan</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Apne ghar ke liye trusted helpers dhundiye. Safai se lekar repair tak, sab kuch ek jagah.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <strong>500+</strong>
+                        <span>Verified Workers</span>
+                    </div>
+                    <div class="stat-item">
+                        <strong>10,000+</strong>
+                        <span>Happy Customers</span>
+                    </div>
+                    <div class="stat-item">
+                        <strong>7</strong>
+                        <span>Major Cities</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="service-finder-card">
+                    <h3>Kya kaam karwana hai?</h3>
+                    <form method="get" action="/Services">
+                        <div class="mb-3">
+                            <select class="form-select" name="city" required>
+                                <option value="">Apna sheher select kariye</option>
+                                @foreach(var city in Model.Cities)
+                                {
+                                    <option value="@city">@city</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <select class="form-select" name="categoryId">
+                                <option value="">Service type (optional)</option>
+                                @foreach(var category in Model.ServiceCategories)
+                                {
+                                    <option value="@category.Id">@category.UrduName</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-search me-2"></i>
+                            Workers Dhundiye
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="services-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>Hamare Services</h2>
+            <p class="text-muted">Ghar ki har zarurat ke liye trusted professionals</p>
+        </div>
+        <div class="row g-4">
+            @foreach(var category in Model.ServiceCategories)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="@category.Icon"></i>
+                        </div>
+                        <h4>@category.UrduName</h4>
+                        <p>@category.Description</p>
+                        <div class="service-tasks">
+                            @foreach(var task in category.CommonTasks.Take(3))
+                            {
+                                <span class="task-tag">@task</span>
+                            }
+                        </div>
+                        <div class="service-price">
+                            Starting from <strong>Rs. @category.BasePrice</strong>
+                        </div>
+                        <a href="/Services?categoryId=@category.Id" class="btn btn-outline-primary">
+                            Workers Dekhiye
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>Kaise Kaam Karta Hai?</h2>
+            <p class="text-muted">Sirf 3 steps mein apna kaam ho jaye</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4>Service Choose Kariye</h4>
+                    <p>Apni zarurat ke hisab se service aur location select kariye</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4>Worker Select Kariye</h4>
+                    <p>Reviews aur ratings dekh kar best worker choose kariye</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h4>Book Kar Diye</h4>
+                    <p>Same day ya schedule kar ke booking confirm kariye</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="testimonials py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>Customer Reviews</h2>
+            <p class="text-muted">Dekiye log kya kehte hain</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>"Bahut acha experience tha. Worker time pe aaya aur kaam bhi perfect kiya."</p>
+                    <div class="customer-info">
+                        <strong>Ayesha Khan</strong>
+                        <span>Karachi</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>"Emergency mein call kiya tha. Jaldi response mila aur problem solve ho gayi."</p>
+                    <div class="customer-info">
+                        <strong>Imran Sheikh</strong>
+                        <span>Lahore</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <p>"Rates reasonable hain aur workers bhi trustworthy. Recommend karunga."</p>
+                    <div class="customer-info">
+                        <strong>Ahmed Ali</strong>
+                        <span>Islamabad</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

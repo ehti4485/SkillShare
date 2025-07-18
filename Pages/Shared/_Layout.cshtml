@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - KaamWala</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PakistaniTaskerPlatform.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-primary" asp-area="" asp-page="/Index">
+                    <i class="fas fa-tools me-2"></i>
+                    KaamWala
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-page="/Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-page="/Services">Workers</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
+                                Services
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/Services?categoryId=1">Ghar ka Kaam</a></li>
+                                <li><a class="dropdown-item" href="/Services?categoryId=2">Chhoti Marammat</a></li>
+                                <li><a class="dropdown-item" href="/Services?categoryId=3">Assembly/Fitting</a></li>
+                                <li><a class="dropdown-item" href="/Services?categoryId=4">Moving Help</a></li>
+                                <li><a class="dropdown-item" href="/Services?categoryId=5">Outdoor Work</a></li>
+                                <li><a class="dropdown-item" href="/Services?categoryId=6">Digital Tasks</a></li>
+                                <li><a class="dropdown-item" href="/Services?categoryId=7">Emergency Help</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#helpModal">
+                                <i class="fas fa-question-circle me-1"></i>
+                                Help
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                <i class="fas fa-user me-1"></i>
+                                Login
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-dark text-light py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="text-primary">KaamWala</h5>
+                    <p>Ghar ka kaam asaan banate hain. Trusted workers, reasonable rates.</p>
+                    <div class="social-links">
+                        <a href="#" class="text-light me-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <h6>Services</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light-50">Cleaning</a></li>
+                        <li><a href="#" class="text-light-50">Repairs</a></li>
+                        <li><a href="#" class="text-light-50">Assembly</a></li>
+                        <li><a href="#" class="text-light-50">Moving</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h6>Cities</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light-50">Karachi</a></li>
+                        <li><a href="#" class="text-light-50">Lahore</a></li>
+                        <li><a href="#" class="text-light-50">Islamabad</a></li>
+                        <li><a href="#" class="text-light-50">Rawalpindi</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6>Contact</h6>
+                    <p><i class="fas fa-phone me-2"></i> 0300-KAAMWALA</p>
+                    <p><i class="fas fa-envelope me-2"></i> help@kaamwala.pk</p>
+                    <p><i class="fas fa-clock me-2"></i> 24/7 Support</p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2025 KaamWala. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-light-50 me-3">Privacy Policy</a>
+                    <a href="#" class="text-light-50">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Help & Support</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Kaise book karein?</h6>
+                    <p>1. Service choose kariye<br>2. Worker select kariye<br>3. Time aur date set kariye</p>
+                    
+                    <h6>Payment kaise karein?</h6>
+                    <p>Cash, JazzCash, EasyPaisa, ya bank transfer se payment kar sakte hain.</p>
+                    
+                    <h6>Emergency service?</h6>
+                    <p>24/7 emergency services available hain. Call kariye: 0300-KAAMWALA</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Login / Sign Up</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <p>Login functionality coming soon!</p>
+                        <p class="text-muted">Abhi ke liye bina login ke bhi book kar sakte hain.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

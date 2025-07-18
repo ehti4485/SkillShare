@@ -1,0 +1,428 @@
+@page
+@model BookModel
+@{
+    ViewData["Title"] = "Book Worker - KaamWala";
+}
+
+<div class="container py-4">
+    @if (Model.Tasker != null)
+    {
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="booking-form-card">
+                    <h2>Book @Model.Tasker.Name</h2>
+                    <p class="text-muted">Complete the form below to book your service</p>
+                    
+                    <form method="post" id="bookingForm">
+                        <input type="hidden" name="TaskerId" value="@Model.Tasker.Id" />
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Aapka Naam *</label>
+                                    <input type="text" class="form-control" name="CustomerName" required 
+                                           placeholder="e.g., Ahmed Ali">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Phone Number *</label>
+                                    <input type="tel" class="form-control" name="CustomerPhone" required 
+                                           placeholder="0300-1234567">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Address *</label>
+                            <textarea class="form-control" name="CustomerAddress" rows="2" required 
+                                      placeholder="House # 123, Street Name, Area, City"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Service Category *</label>
+                            <select class="form-select" name="ServiceCategoryId" required>
+                                <option value="">Select service type</option>
+                                @foreach (var category in Model.ServiceCategories.Where(c => Model.Tasker.ServiceCategoryIds.Contains(c.Id)))
+                                {
+                                    <option value="@category.Id">@category.UrduName</option>
+                                }
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Task Description *</label>
+                            <textarea class="form-control" name="TaskDescription" rows="3" required 
+                                      placeholder="Kya kaam karwana hai? Detail mein batayiye..."></textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Booking Type *</label>
+                                    <select class="form-select" name="BookingType" id="bookingType" required>
+                                        <option value="SameDay">Same Day (Today)</option>
+                                        <option value="Scheduled">Schedule for Later</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3" id="scheduledDateDiv" style="display: none;">
+                                    <label class="form-label">Preferred Date</label>
+                                    <input type="date" class="form-control" name="ScheduledDate" 
+                                           min="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Estimated Duration</label>
+                                    <select class="form-select" name="EstimatedHours">
+                                        <option value="1">1 Hour</option>
+                                        <option value="2" selected>2 Hours</option>
+                                        <option value="3">3 Hours</option>
+                                        <option value="4">4 Hours</option>
+                                        <option value="6">6 Hours</option>
+                                        <option value="8">Full Day (8 Hours)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="form-check mt-4">
+                                        <input class="form-check-input" type="checkbox" name="IsUrgent" id="urgentCheck">
+                                        <label class="form-check-label" for="urgentCheck">
+                                            Urgent (Extra charges may apply)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Special Instructions</label>
+                            <textarea class="form-control" name="SpecialInstructions" rows="2" 
+                                      placeholder="Koi special instructions? (Optional)"></textarea>
+                        </div>
+                        
+                        <div class="cost-estimate mb-4">
+                            <h5>Cost Estimate</h5>
+                            <div class="cost-breakdown">
+                                <div class="d-flex justify-content-between">
+                                    <span>Base Rate (@Model.Tasker.HourlyRate/hour)</span>
+                                    <span id="baseRate">Rs. @(Model.Tasker.HourlyRate * 2)</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span>Service Fee (10%)</span>
+                                    <span id="serviceFee">Rs. @((Model.Tasker.HourlyRate * 2) * 0.1m)</span>
+                                </div>
+                                <div class="d-flex justify-content-between" id="urgentFeeRow" style="display: none;">
+                                    <span>Urgent Fee (20%)</span>
+                                    <span id="urgentFee">Rs. 0</span>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between fw-bold">
+                                    <span>Total Estimate</span>
+                                    <span id="totalCost">Rs. @((Model.Tasker.HourlyRate * 2) * 1.1m)</span>
+                                </div>
+                            </div>
+                            <small class="text-muted">*Final cost may vary based on actual work done</small>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-calendar-check me-2"></i>
+                                Confirm Booking
+                            </button>
+                            <a href="/Services" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Back to Workers
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="worker-summary-card">
+                    <div class="worker-header">
+                        <div class="worker-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="worker-info">
+                            <h4>@Model.Tasker.Name</h4>
+                            <div class="worker-location">
+                                <i class="fas fa-map-marker-alt me-1"></i>
+                                @Model.Tasker.Area, @Model.Tasker.City
+                            </div>
+                            <div class="worker-rating">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    @if (i <= Math.Floor(Model.Tasker.Rating))
+                                    {
+                                        <i class="fas fa-star text-warning"></i>
+                                    }
+                                    else if (i <= Model.Tasker.Rating)
+                                    {
+                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="far fa-star text-warning"></i>
+                                    }
+                                }
+                                <span class="rating-text">@Model.Tasker.Rating.ToString("F1")</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="worker-details">
+                        <div class="detail-item">
+                            <strong>Experience:</strong> @Model.Tasker.Experience
+                        </div>
+                        <div class="detail-item">
+                            <strong>Completed Jobs:</strong> @Model.Tasker.CompletedJobs
+                        </div>
+                        <div class="detail-item">
+                            <strong>Hourly Rate:</strong> Rs. @Model.Tasker.HourlyRate
+                        </div>
+                        <div class="detail-item">
+                            <strong>Phone:</strong> @Model.Tasker.PhoneNumber
+                        </div>
+                    </div>
+                    
+                    <div class="worker-skills">
+                        <h6>Skills</h6>
+                        @foreach (var skill in Model.Tasker.Skills)
+                        {
+                            <span class="skill-tag">@skill</span>
+                        }
+                    </div>
+                    
+                    <div class="worker-badges">
+                        @if (Model.Tasker.IsVerified)
+                        {
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle me-1"></i>
+                                Verified
+                            </span>
+                        }
+                        @if (Model.Tasker.IsAvailable)
+                        {
+                            <span class="badge bg-primary">Available Today</span>
+                        }
+                    </div>
+                </div>
+                
+                <div class="contact-card mt-3">
+                    <h6>Need Help?</h6>
+                    <p class="small text-muted">Questions about booking? Contact our support team.</p>
+                    <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#supportModal">
+                        <i class="fas fa-headset me-2"></i>
+                        Contact Support
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+            <h3>Worker Not Found</h3>
+            <p class="text-muted">The worker you're looking for is not available.</p>
+            <a href="/Services" class="btn btn-primary">Browse Workers</a>
+        </div>
+    }
+</div>
+
+<!-- Support Modal -->
+<div class="modal fade" id="supportModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Customer Support</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fas fa-headset fa-3x text-primary mb-3"></i>
+                    <h6>24/7 Support Available</h6>
+                    <p>Call us: <strong>0300-KAAMWALA</strong></p>
+                    <p>WhatsApp: <strong>0300-522-6925</strong></p>
+                    <p>Email: <strong>help@kaamwala.pk</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.booking-form-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+.worker-summary-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 2rem;
+}
+
+.worker-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.worker-avatar {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+}
+
+.worker-avatar i {
+    color: white;
+    font-size: 1.2rem;
+}
+
+.worker-info h4 {
+    margin-bottom: 0.25rem;
+    color: var(--primary-color);
+}
+
+.worker-location {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.worker-rating {
+    font-size: 0.9rem;
+}
+
+.rating-text {
+    color: #666;
+    margin-left: 0.5rem;
+}
+
+.worker-details {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.detail-item {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.worker-skills {
+    margin-bottom: 1rem;
+}
+
+.worker-skills h6 {
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.worker-badges .badge {
+    margin-right: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.contact-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.cost-estimate {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.cost-breakdown {
+    margin-bottom: 0.5rem;
+}
+
+.cost-breakdown > div {
+    margin-bottom: 0.5rem;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const bookingTypeSelect = document.getElementById('bookingType');
+    const scheduledDateDiv = document.getElementById('scheduledDateDiv');
+    const urgentCheck = document.getElementById('urgentCheck');
+    const estimatedHoursSelect = document.querySelector('select[name="EstimatedHours"]');
+    
+    const baseHourlyRate = @Model.Tasker?.HourlyRate ?? 0;
+    
+    // Show/hide scheduled date field
+    bookingTypeSelect.addEventListener('change', function() {
+        if (this.value === 'Scheduled') {
+            scheduledDateDiv.style.display = 'block';
+            document.querySelector('input[name="ScheduledDate"]').required = true;
+        } else {
+            scheduledDateDiv.style.display = 'none';
+            document.querySelector('input[name="ScheduledDate"]').required = false;
+        }
+    });
+    
+    // Update cost calculation
+    function updateCostEstimate() {
+        const hours = parseInt(estimatedHoursSelect.value) || 2;
+        const isUrgent = urgentCheck.checked;
+        
+        const baseRate = baseHourlyRate * hours;
+        const serviceFee = baseRate * 0.1;
+        const urgentFee = isUrgent ? baseRate * 0.2 : 0;
+        const total = baseRate + serviceFee + urgentFee;
+        
+        document.getElementById('baseRate').textContent = `Rs. ${baseRate}`;
+        document.getElementById('serviceFee').textContent = `Rs. ${serviceFee}`;
+        document.getElementById('urgentFee').textContent = `Rs. ${urgentFee}`;
+        document.getElementById('totalCost').textContent = `Rs. ${total}`;
+        
+        const urgentFeeRow = document.getElementById('urgentFeeRow');
+        urgentFeeRow.style.display = isUrgent ? 'flex' : 'none';
+    }
+    
+    estimatedHoursSelect.addEventListener('change', updateCostEstimate);
+    urgentCheck.addEventListener('change', updateCostEstimate);
+    
+    // Form submission
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Simulate booking process
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+        
+        setTimeout(() => {
+            // Simulate successful booking
+            window.location.href = '/BookingConfirmation?bookingId=' + Math.floor(Math.random() * 1000);
+        }, 2000);
+    });
+});
+</script>
+
