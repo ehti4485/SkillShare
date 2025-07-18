@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: skillshare
+    env: docker
+    repo: https://github.com/ehti4485/SkillShare
+    branch: main
+    dockerfilePath: Dockerfile
+    autoDeploy: true
